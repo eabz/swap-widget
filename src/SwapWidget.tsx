@@ -1,8 +1,8 @@
 import type React from 'react'
-import { useSwap, type IUseSwapProps } from './useSwap'
+import { type IUseSwapProps, useSwap } from './useSwap'
 import './styles.css'
 
-export interface SwapWidgetProps extends IUseSwapProps {
+export interface ISwapWidgetProps extends IUseSwapProps {
   title?: string
   width?: string | number
   className?: string
@@ -17,7 +17,7 @@ export interface SwapWidgetProps extends IUseSwapProps {
   }
 }
 
-export const SwapWidget: React.FC<SwapWidgetProps> = ({
+export const SwapWidget: React.FC<ISwapWidgetProps> = ({
   title = 'Swap',
   width,
   className = '',
@@ -32,10 +32,10 @@ export const SwapWidget: React.FC<SwapWidgetProps> = ({
   const containerStyle: React.CSSProperties = {
     width,
     ...style,
-    ...(theme?.primaryColor ? ({ '--sw-primary-color': theme.primaryColor } as any) : {}),
-    ...(theme?.backgroundColor ? ({ '--sw-background-color': theme.backgroundColor } as any) : {}),
-    ...(theme?.textColor ? ({ '--sw-text-color': theme.textColor } as any) : {}),
-    ...(theme?.borderRadius ? ({ '--sw-border-radius': theme.borderRadius } as any) : {})
+    ...(theme?.primaryColor ? ({ '--sw-primary-color': theme.primaryColor } as React.CSSProperties) : {}),
+    ...(theme?.backgroundColor ? ({ '--sw-background-color': theme.backgroundColor } as React.CSSProperties) : {}),
+    ...(theme?.textColor ? ({ '--sw-text-color': theme.textColor } as React.CSSProperties) : {}),
+    ...(theme?.borderRadius ? ({ '--sw-border-radius': theme.borderRadius } as React.CSSProperties) : {})
   }
 
   const handleSwap = async () => {
@@ -51,31 +51,35 @@ export const SwapWidget: React.FC<SwapWidgetProps> = ({
       <h2 style={{ marginTop: 0 }}>{title}</h2>
 
       <div className="sw-input-group">
-        <label className="sw-label">From ({state.tokenIn?.symbol || 'Select Token'})</label>
-        <input
-          type="number"
-          className="sw-input"
-          placeholder="0.0"
-          value={state.amountIn}
-          onChange={(e) => setAmountIn(e.target.value)}
-        />
+        <label className="sw-label">
+          From ({state.tokenIn?.symbol || 'Select Token'})
+          <input
+            type="number"
+            className="sw-input"
+            placeholder="0.0"
+            value={state.amountIn}
+            onChange={(e) => setAmountIn(e.target.value)}
+          />
+        </label>
       </div>
 
       <div className="sw-input-group">
-        <label className="sw-label">To ({state.tokenOut?.symbol || 'Select Token'})</label>
-        <input type="text" className="sw-input" placeholder="0.0" value={state.amountOut} readOnly />
+        <label className="sw-label">
+          To ({state.tokenOut?.symbol || 'Select Token'})
+          <input type="text" className="sw-input" placeholder="0.0" value={state.amountOut} readOnly />
+        </label>
       </div>
 
       {state.error && <div className="sw-error">{state.error}</div>}
 
       <div className="sw-info">{state.loading && <span>Fetching quote...</span>}</div>
 
-      <button className="sw-button" onClick={handleSwap} disabled={!state.amountIn || state.loading}>
+      <button type="button" className="sw-button" onClick={handleSwap} disabled={!state.amountIn || state.loading}>
         {state.loading ? 'Swapping...' : 'Swap'}
       </button>
 
       {state.txHash && (
-        <div style={{ marginTop: 10, color: 'green', fontSize: '0.9em' }}>
+        <div style={{ color: 'green', fontSize: '0.9em', marginTop: 10 }}>
           Swap Successful! Tx: {state.txHash.slice(0, 10)}...
         </div>
       )}

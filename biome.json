@@ -8,7 +8,7 @@
     }
   },
   "files": {
-    "includes": ["src/**/*", "!**/node_modules"]
+    "includes": ["**/*", "!**/node_modules", "!**/dist"]
   },
   "formatter": {
     "enabled": true,
@@ -67,7 +67,7 @@
                 }
               },
               {
-                "formats": ["CONSTANT_CASE"],
+                "formats": ["CONSTANT_CASE", "PascalCase"],
                 "selector": {
                   "kind": "const",
                   "scope": "global"
